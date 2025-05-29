@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Aplication
 metadata:
   name: rabbitmq
   namespace: prod-namespace
