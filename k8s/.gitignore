@@ -1,2 +1,0 @@
-k8s/keys/*
-!k8s/keys/*.pub
