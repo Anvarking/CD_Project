@@ -1,2 +1,2 @@
-# Игнорируем все ключи в папке k8s/keys
-k8s/keys/
+k8s/keys/*
+!k8s/keys/*.pub
