@@ -16,7 +16,7 @@ spec:
 
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: prod # не уверен на счет этого неймспейса может прод поставить!)
+    namespace: argocd # не уверен на счет этого неймспейса может прод поставить!)
 
 
   syncPolicy:
