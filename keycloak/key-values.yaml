@@ -1,0 +1,56 @@
+# Global PostgreSQL settings
+global:
+  postgresql:
+    auth:
+      username: bn_keycloak
+      password: bn_keycloak
+      database: bitnami_keycloak
+
+# Keycloak Admin User Configuration
+auth:
+  adminUser: admin
+  adminPassword: admin
+
+replicaCount: 1 # Отключаем основной Keycloak
+
+
+# PostgreSQL Specific Configuration
+postgresql:
+  enabled: true
+  replicaCount: 1
+  auth:
+    username: bn_keycloak
+    password: bn_keycloak
+    database: bitnami_keycloak
+
+# Kubernetes Service Configuration
+service:
+  type: NodePort
+  nodePorts:
+    http: 30085
+
+# Additional Keycloak Environment Variables
+extraEnvVars:
+  - name: KC_PRODUCTION
+    value: "true"
+  - name: KC_HOSTNAME_STRICT
+    value: "false"
+  - name: KC_HTTP_ENABLED
+    value: "true"
+  - name: VERTX_WORKER_POOL_SIZE
+    value: "20"
+  - name: VERTX_EVENT_LOOP_POOL_SIZE
+    value: "8"
+
+
+resources:
+  requests:
+    # Запрос на 256 мегабайт памяти
+    memory: 1000Mi
+    # Можно также добавить запрос на CPU, если нужно, например, 0.1 CPU
+    cpu: 400m
+  limits:
+    # Лимит на 256 мегабайт памяти
+    memory: 2000Mi
+    # Можно также добавить лимит на CPU, если нужно, например, 0.2 CPU
+    cpu: 1000m
