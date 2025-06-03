@@ -15,7 +15,7 @@ configs:
       name: Keycloak
       issuer: http://192.168.49.2:30085/realms/master # Если Keycloak в кластере, лучше использовать ClusterIP Service Name (например, http://keycloak-headless.argocd.svc.cluster.local:8080/realms/master)
       clientID: argocd
-      clientSecret: hyMsqikAkBVgzd7l4YSPoqR1XioVHpIs
+      clientSecret: 756d7Qp3Ubm0GDRGIDEUsCSrJD9gXhFF
       requestedScopes: ["openid", "profile", "email", "groups"]
       # ЭТО КРИТИЧЕСКИ ВАЖНО: Укажите точное имя клейма, где Keycloak передает группы.
       # Если это "groups" (по умолчанию), то так и оставьте. Иначе, измените.
