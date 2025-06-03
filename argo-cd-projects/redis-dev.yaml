@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   project: dev
-  
+
   source:
     repoURL: 'git@github.com:Anvarking/CD_Project.git'
     targetRevision: HEAD
@@ -16,7 +16,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: dev
 
   syncPolicy:
     automated:
