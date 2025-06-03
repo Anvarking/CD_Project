@@ -5,14 +5,22 @@ metadata:
   namespace: argocd
 spec:
   project: dev
+  
   source:
-    repoURL: git@github.com:Anvarking/CD_Project.git
+    repoURL: 'git@github.com:Anvarking/CD_Project.git'
     targetRevision: HEAD
     path: redis
+    helm:
+      valueFiles:
+        - values.yaml
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: dev
+    namespace: argocd
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+  syncOptions:
+    - CreateNamespace=true

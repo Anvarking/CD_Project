@@ -5,14 +5,23 @@ metadata:
   namespace: argocd
 spec:
   project: prod
+
   source:
-    repoURL: git@github.com:Anvarking/CD_Project.git
+    repoURL: 'git@github.com:Anvarking/CD_Project.git
     targetRevision: HEAD
     path: rabbitmq
+    helm:
+      valueFiles:
+        - values.yaml
+
   destination:
-    server: https://kubernetes.default.svc
-    namespace: prod
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd # не уверен на счет этого неймспейса может прод поставить!)
+
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+  syncOptions:
+    - CreateNamespace=true
