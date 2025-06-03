@@ -13,7 +13,7 @@ configs:
     # ОЧЕНЬ ВАЖНО: Убедитесь, что эти настройки OIDC корректны
     oidc.config: |
       name: Keycloak
-      issuer: http://192.168.49.2:30080/realms/master # Если Keycloak в кластере, лучше использовать ClusterIP Service Name (например, http://keycloak-headless.argocd.svc.cluster.local:8080/realms/master)
+      issuer: http://192.168.49.2:30085/realms/master # Если Keycloak в кластере, лучше использовать ClusterIP Service Name (например, http://keycloak-headless.argocd.svc.cluster.local:8080/realms/master)
       clientID: argocd
       clientSecret: hyMsqikAkBVgzd7l4YSPoqR1XioVHpIs
       requestedScopes: ["openid", "profile", "email", "groups"]
