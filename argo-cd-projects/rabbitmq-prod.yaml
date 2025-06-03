@@ -7,21 +7,20 @@ spec:
   project: prod
 
   source:
-    repoURL: 'git@github.com:Anvarking/CD_Project.git
+    repoURL: 'git@github.com:Anvarking/CD_Project.git'
     targetRevision: HEAD
     path: rabbitmq
     helm:
       valueFiles:
-        - values.yaml
+        - rebbitmq-value.yaml
 
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: argocd # не уверен на счет этого неймспейса может прод поставить!)
-
+    namespace: argocd
 
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
-  syncOptions:
+      prune: true       # Удаляет ресурсы, которых больше нет в Git
+      selfHeal: true    # Восстанавливает удалённые или изменённые вручную ресурсы
+    syncOptions:
     - CreateNamespace=true

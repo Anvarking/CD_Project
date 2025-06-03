@@ -12,15 +12,15 @@ spec:
     path: redis
     helm:
       valueFiles:
-        - values.yaml
+        - redis-value.yaml
 
   destination:
-    server: https://kubernetes.default.svc
+    server: 'https://kubernetes.default.svc'
     namespace: argocd
 
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
-  syncOptions:
+      prune: true       # Удаляет ресурсы, которых больше нет в Git
+      selfHeal: true    # Восстанавливает удалённые или изменённые вручную ресурсы
+    syncOptions:
     - CreateNamespace=true
