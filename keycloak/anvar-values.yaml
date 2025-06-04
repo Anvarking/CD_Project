@@ -27,13 +27,28 @@ configs:
     server.insecure: true # В продакшене это должно быть false и настроен TLS
 
   rbac:
-    policy.default: ""
+    policy.default: "" # Рекомендую оставить пустым, чтобы явно задавать права. Если хотите readonly по умолчанию, поставьте role:readonly
     policy.csv: |
       g, ArgoCDAdmins, role:admin
       g, ArgoCD_dev, role:project-dev
       g, ArgoCD_prod, role:project-prod
-    policy.matchMode: glob
+      g, ArgoCDAdmins2, role:admin
 
+      p, role:project-dev, projects, get, dev, allow
+      p, role:project-dev, applications, get, dev/*, allow # Просмотр
+      p, role:project-dev, applications, sync, dev/*, allow # Синхронизация
+      p, role:project-dev, applications, delete, dev/*, deny # Рекомендуется явно запретить удаление
+      p, role:project-dev, repositories, get, *, allow
+      p, role:project-dev, clusters, get, *, allow # Часто полезно для просмотра кластеров
+
+      p, role:project-prod, projects, get, prod, allow
+      p, role:project-prod, applications, get, prod/*, allow # Просмотр
+      p, role:project-prod, applications, sync, prod/*, allow # Синхронизация
+      p, role:project-prod, applications, delete, prod/*, deny # ОЧЕНЬ РЕКОМЕНДУЕТСЯ ЯВНО ЗАПРЕТИТЬ УДАЛЕНИЕ В ПРОДЕ
+      p, role:project-prod, repositories, get, *, allow
+      p, role:project-prod, clusters, get, *, allow # Часто полезно для просмотра кластеров
+    policy.matchMode: glob
+    # scopes: '[groups]' # Эту строку нужно удалить, она не принадлежит rbac-cm
 
 server:
   service:
