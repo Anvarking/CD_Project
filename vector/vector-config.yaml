@@ -9,7 +9,8 @@ data:
     sources:
       kubernetes_logs:
         type: kubernetes_logs
-        extra_namespace_labels: ["argocd"] # Добавляем неймспейс для Argo CD
+        # Удалили extra_namespace_labels, так как оно вызывает ошибку
+        # Фильтрация по argocd namespace будет происходить в transforms
 
     # Преобразование логов (парсинг JSON, добавление лейблов)
     transforms:
@@ -19,7 +20,7 @@ data:
         inputs:
           - kubernetes_logs
         source: |
-          if .kubernetes.namespace_name == "argocd" {
+          if .kubernetes.namespace_name == "argocd" { # Вот здесь мы и фильтруем по неймспейсу argocd
             if is_string(.message) && starts_with(.message, "{") && ends_with(.message, "}") {
               parsed = parse_json(.message)
               if parsed != null {
@@ -35,6 +36,11 @@ data:
             .loki.kubernetes_pod = .kubernetes.pod_name
             .loki.kubernetes_container = .kubernetes.container_name
             .loki.level = .level || "info"
+          } else {
+            # Если это не логи Argo CD, то мы можем их отбросить, чтобы не отправлять лишнее в Loki
+            # Или же, если вы хотите собирать логи из других неймспейсов, уберите этот блок.
+            # Для нашей текущей задачи (логи Argo CD), отбросим все остальное.
+            abort
           }
 
     # Назначение: отправка логов в Loki
@@ -42,7 +48,7 @@ data:
       loki_sink:
         type: loki
         inputs:
-          - argo_cd_json_parser
+          - argo_cd_json_parser # Используем преобразованные логи
         endpoint: http://loki-stack-loki.monitoring.svc.cluster.local:3100/api/prom/push # Адрес вашего Loki
         encoding:
           codec: json
