@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: time-app-nginx
+  namespace: argocd # Теперь в неймспейсе argocd
+  labels:
+    app.kubernetes.io/name: time-app
+    app.kubernetes.io/instance: time-app-instance-001
+spec:
+  serviceName: "time-app-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: time-app
+  template:
+    metadata:
+      labels:
+        app: time-app
+        app.kubernetes.io/name: time-app
+        app.kubernetes.io/instance: time-app-instance-001
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+              name: http
+          volumeMounts:
+            - name: html-volume
+              mountPath: /usr/share/nginx/html
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+        - name: time-updater
+          image: alpine/git
+          command: ["/bin/sh", "-c"]
+          args:
+            - while true; do echo "<html><body><h1>Current Time: $(date)</h1></body></html>" > /usr/share/nginx/html/index.html; sleep 1; done
+          volumeMounts:
+            - name: html-volume
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: html-volume
+          emptyDir: {}

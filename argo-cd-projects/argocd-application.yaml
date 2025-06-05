@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-time-app
+  namespace: argocd # Ресурс Application всегда в неймспейсе argocd
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:Anvarking/CD_Project.git' 
+    targetRevision: HEAD
+    path: my-app-config # Путь к манифестам внутри репозитория (если они в корне)
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd # ВСЕ РЕСУРСЫ БУДУТ РАЗВЕРНУТЫ В НЕЙМСПЕЙСЕ ARGOCD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # CreateNamespace=true не нужен, так как argocd namespace уже существует
+      - ServerSideApply=true # Для более безопасного применения изменений

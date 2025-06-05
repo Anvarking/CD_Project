@@ -2,15 +2,15 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vector-config
-  namespace: monitoring # Убедитесь, что неймспейс совпадает с тем, где запущен Vector
+  namespace: monitoring
 data:
   vector.yaml: |
     # Источник логов: сбор логов из Kubernetes
     sources:
       kubernetes_logs:
         type: kubernetes_logs
-        # Удалили extra_namespace_labels, так как оно вызывает ошибку
-        # Фильтрация по argocd namespace будет происходить в transforms
+        # ИСПРАВЛЕНИЕ 1: Добавляем self_node_name
+        self_node_name: "{{ HOSTNAME }}"
 
     # Преобразование логов (парсинг JSON, добавление лейблов)
     transforms:
@@ -20,11 +20,15 @@ data:
         inputs:
           - kubernetes_logs
         source: |
-          if .kubernetes.namespace_name == "argocd" { # Вот здесь мы и фильтруем по неймспейсу argocd
-            if is_string(.message) && starts_with(.message, "{") && ends_with(.message, "}") {
-              parsed = parse_json(.message)
+          if .kubernetes.namespace_name == "argocd" {
+            # ИСПРАВЛЕНИЕ 2: Явно приводим .message к строке перед проверками
+            # Используем `to_string` для большей безопасности, чтобы избежать падения,
+            # если .message не является строкой.
+            msg_str = to_string(.message) ?? ""
+            if msg_str != null && starts_with(msg_str, "{") && ends_with(msg_str, "}") {
+              parsed = parse_json(msg_str) ?? null
               if parsed != null {
-                . = merge(., parsed)
+                . = merge!(., parsed)
                 del(.message)
               }
             }
@@ -37,9 +41,6 @@ data:
             .loki.kubernetes_container = .kubernetes.container_name
             .loki.level = .level || "info"
           } else {
-            # Если это не логи Argo CD, то мы можем их отбросить, чтобы не отправлять лишнее в Loki
-            # Или же, если вы хотите собирать логи из других неймспейсов, уберите этот блок.
-            # Для нашей текущей задачи (логи Argo CD), отбросим все остальное.
             abort
           }
 
@@ -48,8 +49,8 @@ data:
       loki_sink:
         type: loki
         inputs:
-          - argo_cd_json_parser # Используем преобразованные логи
-        endpoint: http://loki-stack-loki.monitoring.svc.cluster.local:3100/api/prom/push # Адрес вашего Loki
+          - argo_cd_json_parser
+        endpoint: http://loki-stack-loki.monitoring.svc.cluster.local:3100/api/prom/push
         encoding:
           codec: json
         labels:
