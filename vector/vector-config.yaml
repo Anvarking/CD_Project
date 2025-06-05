@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vector-config
+  namespace: monitoring # Убедитесь, что неймспейс совпадает с тем, где запущен Vector
+data:
+  vector.yaml: |
+    # Источник логов: сбор логов из Kubernetes
+    sources:
+      kubernetes_logs:
+        type: kubernetes_logs
+        extra_namespace_labels: ["argocd"] # Добавляем неймспейс для Argo CD
+
+    # Преобразование логов (парсинг JSON, добавление лейблов)
+    transforms:
+      # Для логов Argo CD, которые уже в JSON формате
+      argo_cd_json_parser:
+        type: remap
+        inputs:
+          - kubernetes_logs
+        source: |
+          if .kubernetes.namespace_name == "argocd" {
+            if is_string(.message) && starts_with(.message, "{") && ends_with(.message, "}") {
+              parsed = parse_json(.message)
+              if parsed != null {
+                . = merge(., parsed)
+                del(.message)
+              }
+            }
+            .kubernetes.container_name = .kubernetes.pod_labels."app.kubernetes.io/component" || .kubernetes.container_name
+            .kubernetes.app_name = .kubernetes.pod_labels."app.kubernetes.io/name"
+            .kubernetes.instance = .kubernetes.pod_labels."app.kubernetes.io/instance"
+
+            .loki.kubernetes_namespace = .kubernetes.namespace_name
+            .loki.kubernetes_pod = .kubernetes.pod_name
+            .loki.kubernetes_container = .kubernetes.container_name
+            .loki.level = .level || "info"
+          }
+
+    # Назначение: отправка логов в Loki
+    sinks:
+      loki_sink:
+        type: loki
+        inputs:
+          - argo_cd_json_parser
+        endpoint: http://loki-stack-loki.monitoring.svc.cluster.local:3100/api/prom/push # Адрес вашего Loki
+        encoding:
+          codec: json
+        labels:
+          job: kubernetes-pods
+          host: "{{ HOSTNAME }}"
+          namespace: "{{ kubernetes.namespace_name }}"
+          pod: "{{ kubernetes.pod_name }}"
+          container: "{{ kubernetes.container_name }}"
+          app_name: "{{ kubernetes.app_name }}"
+          instance: "{{ kubernetes.instance }}"
+          component: "{{ kubernetes.container_name }}"
+        remove_label_fields: true
