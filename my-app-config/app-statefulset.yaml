@@ -44,7 +44,7 @@ spec:
           image: alpine/git
           command: ["/bin/sh", "-c"]
           args:
-            - while true; do echo "<html><body><h1>Current Time: $(date)</h1></body></html>" > /usr/share/nginx/html/index.html; sleep 1; done
+            - 'while true; do echo "<html><body><h1>Current Time: $(date)</h1></body></html>" > /usr/share/nginx/html/index.html; sleep 1; done'
           volumeMounts:
             - name: html-volume
               mountPath: /usr/share/nginx/html
