@@ -50,7 +50,7 @@ data:
         type: loki
         inputs:
           - app_logs_parser # Убедитесь, что здесь используется правильное имя transform
-        endpoint: http://loki-stack-loki.monitoring.svc.cluster.local:3100/api/prom/push
+        endpoint: http://loki-stack.monitoring.svc.cluster.local:3100/api/prom/push
         encoding:
           codec: json
         labels:
