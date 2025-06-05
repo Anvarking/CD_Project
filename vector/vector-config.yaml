@@ -52,7 +52,7 @@ data:
           - app_logs_parser # Убедитесь, что здесь используется правильное имя transform
         endpoint: http://loki-stack.monitoring.svc.cluster.local:3100
         encoding:
-          codec: json
+          codec: text
         labels:
           job: kubernetes-pods
           host: "{{ HOSTNAME }}"
