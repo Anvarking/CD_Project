@@ -25,3 +25,6 @@ sinks:
     endpoint: "http://loki-stack:3100"
     encoding:
       codec: "json"
+    labels:
+      job: "argocd"
+
