@@ -14,7 +14,7 @@ sources:
     type: "file"
     include:
       - "/var/log/*.log" # supports globbing
-    ignore_older_secs: 86400     # 1 day
+    ignore_older_secs: '86400'     # 1 day
 
 # Send structured data to a short-term storage
 sinks:
