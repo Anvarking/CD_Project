@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-project
+  namespace: argocd
+spec:
+  project: prod
+
+  source:
+    repoURL: 'git@github.com:Anvarking/CD_Project.git'
+    targetRevision: HEAD
+    path: grafana
+    helm:
+      valueFiles:
+        - value-graf.yaml
+
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true       # Удаляет ресурсы, которых больше нет в Git
+      selfHeal: true    # Восстанавливает удалённые или изменённые вручную ресурсы
+    syncOptions:
+    - CreateNamespace=true
