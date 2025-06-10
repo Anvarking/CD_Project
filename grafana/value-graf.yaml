@@ -9,9 +9,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 80
-      targetPort: 3000
-      protocol: TCP
+    - port: 3000
+      targetPort: http
+      nodePort: 30000
   selector:
     app: grafana
     group: grafana
