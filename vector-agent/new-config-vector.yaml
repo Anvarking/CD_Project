@@ -22,5 +22,4 @@ sinks:
     inputs:
       - "my_app_logs"       # only take sampled data
     type: "loki"
-    endpoint:
-      - "http://loki-stack:3100"
+    endpoint: "http://loki-stack:3100"
