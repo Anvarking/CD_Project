@@ -23,4 +23,4 @@ sinks:
       - "my_app_logs"       # only take sampled data
     type: "loki"
     endpoints:
-      - "hhtp://loki-stack:3100"
+      - "http://loki-stack:3100"
