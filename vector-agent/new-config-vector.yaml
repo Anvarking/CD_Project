@@ -20,9 +20,9 @@ sources:
 sinks:
   loki_klaster:
     inputs:
-      - "my_app_logs"       # only take sampled data
+      - "my_app_logs"    
     type: "loki"
-    endpoint: "http://loki-stack:3100"
+    endpoint: "http://loki-loki-distributed-querier:3100"
     encoding:
       codec: "json"
     labels:
