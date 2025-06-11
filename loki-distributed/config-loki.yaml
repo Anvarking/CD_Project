@@ -1151,7 +1151,7 @@ gateway:
     # -- ClusterIP of the gateway service
     clusterIP: null
     # -- Node port if service type is NodePort
-    nodePort: 31000
+    nodePort: 3100
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
     # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
