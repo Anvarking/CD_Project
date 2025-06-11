@@ -12,8 +12,8 @@ api:
 sources:
   kubernetes_pod_logs:
     type: "kubernetes_logs"
-    include_paths_glob_patterns:
-      - "/var/log/*"
+    #include_paths_glob_patterns:
+    #  - "/var/log/*"
 
 # Send structured data to a short-term storage
 sinks:
