@@ -9,14 +9,17 @@ metadata:
 spec:
   type: NodePort
   ports:
+    - port: 3000
       nodePort: 30000
+      targetPort: 3000
+      name: http
   selector:
     app: grafana
     group: grafana
 
 ---
 
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
@@ -40,6 +43,9 @@ spec:
         - name: grafana
           image: grafana/grafana:11.0.0
           imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              name: http
           env:
             - name: GF_EXPLORE_ENABLED
               value: "true"
