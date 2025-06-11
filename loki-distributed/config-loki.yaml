@@ -9,7 +9,9 @@ metadata:
 spec:
   type: NodePort
   ports:
-      nodePort: 31000 
+    - port: 3100
+      targetPort: 3100
+      protocol: TCP
   selector:
     app: loki
     group: grafana

@@ -8,8 +8,10 @@ metadata:
     group: grafana
 spec:
   type: NodePort
-  ports:
-      nodePort: 30000
+    ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
   selector:
     app: grafana
     group: grafana
