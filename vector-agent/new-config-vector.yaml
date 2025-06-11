@@ -12,15 +12,14 @@ api:
 sources:
   kubernetes_pod_logs:
     type: "kubernetes_logs"
-    #include:
-    #  - "/var/log/*.log" # supports globbing
-    # ignore_older_secs: '86400'     # 1 day
+    include_paths_glob_patterns:
+      - "/var/log/*"
 
 # Send structured data to a short-term storage
 sinks:
   loki_klaster:
     inputs:
-      - "kubernetes_logs_source"    
+      - "kubernetes_pod_logs"    
     type: "loki"
     endpoint: "http://loki-loki-distributed-gateway:80"
     encoding:
