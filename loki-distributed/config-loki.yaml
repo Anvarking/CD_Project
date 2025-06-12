@@ -247,7 +247,37 @@ loki:
       cache_ttl: 168h
     filesystem:
       directory: /var/loki/chunks
+
+    extraEnv: # <--- Эта секция добавляет переменные окружения в поды Loki
+    - name: MINIO_ROOT_USER
+      valueFrom:
+        secretKeyRef:
+          name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
+          key: root-user        # <--- Ключ для имени пользователя в этом секрете
+    - name: MINIO_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
+          key: root-password
+          
+  config:
+    storage:
+      bucketnames: "loki-bucket"
+
+      s3:
+        endpoint: "minio.argocd.svc.cluster.local:9000"
+      s3forcepathstyle: true
+
+      access_key_id: "${MINIO_ROOT_USER}"    
+      secret_access_key: "${MINIO_ROOT_PASSWORD}" 
+
+      insecure: true
+
+      region: "us-east-1"
+
+
 # -- Uncomment to configure each storage individually
+
 #   azure: {}
 #   gcs: {}
 #   s3: {}
@@ -1357,6 +1387,9 @@ gateway:
 
 # Configuration for the compactor
 compactor:
+  working_directory: /var/loki/compactor
+  retention_enabled: true
+  retention_period: 720h
   # -- Kind of deployment [StatefulSet/Deployment]
   kind: StatefulSet
   # -- Number of replicas for the compactor
