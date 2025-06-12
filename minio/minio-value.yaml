@@ -43,7 +43,7 @@ nameOverride: ""
 namespaceOverride: ""
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: ""
+fullnameOverride: "minio"
 ## @param commonLabels Labels to add to all deployed objects
 ##
 commonLabels: {}
@@ -791,6 +791,7 @@ networkPolicy:
 ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 ##
 persistence:
+  size: 20Gi 
   ## @param persistence.enabled Enable MinIO&reg; data persistence using PVC. If false, use emptyDir
   ##
   enabled: true
@@ -801,7 +802,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: ""
+  storageClass: standard
   ## @param persistence.mountPath Data volume mount path
   ##
   mountPath: /bitnami/minio/data
