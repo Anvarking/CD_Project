@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+spec:
+  project: prod
+
+  source:
+    repoURL: 'git@github.com:Anvarking/CD_Project.git'
+    targetRevision: HEAD
+    path: minio
+    helm:
+      valueFiles:
+        - minio-value.yaml
+
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true       # Удаляет ресурсы, которых больше нет в Git
+      selfHeal: true    # Восстанавливает удалённые или изменённые вручную ресурсы
+    syncOptions:
+    - CreateNamespace=true
