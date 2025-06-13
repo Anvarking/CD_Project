@@ -110,7 +110,7 @@ loki:
     memberlist:
       cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
       join_members:
-        - {{ include "loki.fullname" . }}-memberlist
+        - {{ include "loki.fullname" . }}-memberlist.{{ .Release.Namespace }}.svc.cluster.local
 
     ingester_client:
       grpc_client_config:
@@ -122,10 +122,10 @@ loki:
           kvstore:
             store: memberlist
           replication_factor: 1
-      chunk_idle_period: 1m
+      chunk_idle_period: 1m #тут
       chunk_block_size: 262144
       chunk_encoding: snappy
-      chunk_retain_period: 30s
+      chunk_retain_period: 30s #и тут поменял время
       max_transfer_retries: 0
       wal:
         dir: /var/loki/wal
@@ -249,6 +249,8 @@ loki:
     filesystem:
       directory: /var/loki/chunks
 # -- Uncomment to configure each storage individually
+#   azure: {} 
+#   gcs: {} 
     aws:
       s3: "loki"
       endpoint: "http://minio-mon.argocd.svc.cluster.local:9000"
@@ -261,9 +263,6 @@ loki:
       access_key_id: "AhvrSP4zLwUmqiNGKuNJ"
       secret_access_key: "AgMzEz4FKXkVCNuXENHc655olh3X0msJJdlrI7vi"
       region: us-east-1
-#   azure: {}
-#   gcs: {}
-#   s3: {}
 #   boltdb: {}
 
   # -- Structured loki configuration, takes precedence over `loki.config`, `loki.schemaConfig`, `loki.storageConfig`
@@ -1164,7 +1163,7 @@ gateway:
     # -- ClusterIP of the gateway service
     clusterIP: null
     # -- Node port if service type is NodePort
-    # nodePort: 
+    nodePort: null
     # -- Load balancer IPO address if service type is LoadBalancer
     loadBalancerIP: null
     # -- Load balancer allow traffic from CIDR list if service type is LoadBalancer
@@ -1370,7 +1369,7 @@ gateway:
 
 # Configuration for the compactor
 compactor:
-  
+  # -- Kind of deployment [StatefulSet/Deployment]
   kind: StatefulSet
   # -- Number of replicas for the compactor
   replicas: 1
