@@ -251,7 +251,7 @@ loki:
 # -- Uncomment to configure each storage individually
     aws:
       s3: "loki"
-      endpoint: "http://minio-mon.argocd.svc.cluster.local:9000"
+      endpoint: "http://minio.argocd.svc.cluster.local:9000"
       s3forcepathstyle: true
       bucketnames: "loki-bucket"
       access_key_id: "admin"
