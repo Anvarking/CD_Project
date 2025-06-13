@@ -27,6 +27,18 @@ hostAliases: []
 #      - domain.tld
 
 loki:
+
+  extraEnv: # <--- Эта секция добавляет переменные окружения в поды Loki
+    - name: MINIO_ROOT_USER
+      valueFrom:
+        secretKeyRef:
+          name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
+          key: root-user        # <--- Ключ для имени пользователя в этом секрете
+    - name: MINIO_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
+          key: root-password
   # -- If set, these annotations are added to all of the Kubernetes controllers
   # (Deployments, StatefulSets, etc) that this chart launches. Use this to
   # implement something like the "Wave" controller or another controller that
@@ -108,18 +120,16 @@ loki:
           store: memberlist
 
     storage:
-      bucketnames: "loki-bucket"
-
+      boltdb_shipper:
+        shared_store: s3
       s3:
+        bucketnames: "loki-bucket"
         endpoint: "minio.argocd.svc.cluster.local:9000"
-      s3forcepathstyle: true
-
-      access_key_id: "${MINIO_ROOT_USER}"    
-      secret_access_key: "${MINIO_ROOT_PASSWORD}" 
-
-      insecure: true
-
-      region: "us-east-1"
+        s3forcepathstyle: true
+        access_key_id: "${MINIO_ROOT_USER}"
+        secret_access_key: "${MINIO_ROOT_PASSWORD}"
+        insecure: true
+        region: "us-east-1"
 
     memberlist:
       cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
@@ -262,17 +272,7 @@ loki:
     filesystem:
       directory: /var/loki/chunks
 
-    extraEnv: # <--- Эта секция добавляет переменные окружения в поды Loki
-    - name: MINIO_ROOT_USER
-      valueFrom:
-        secretKeyRef:
-          name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
-          key: root-user        # <--- Ключ для имени пользователя в этом секрете
-    - name: MINIO_ROOT_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
-          key: root-password
+    
 
 
 
