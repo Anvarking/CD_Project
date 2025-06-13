@@ -24,7 +24,7 @@ global:
     ## @param global.security.allowInsecureImages Allows skipping image verification
     allowInsecureImages: false
   ## Compatibility adaptations for Kubernetes platforms
-  ##
+  ##MinIO
   compatibility:
     ## Compatibility adaptations for Openshift
     ##
@@ -572,11 +572,11 @@ defaultInitContainers:
 service:
   ## @param service.type MinIO&reg; service type
   ##
-  type: ClusterIP
+  type: NodePort
   ## @param service.ports.api MinIO&reg; API service port
   ##
   ports:
-    api: 9000
+    api: 30010
   ## @param service.nodePorts.api Specify the MinIO&reg API nodePort value for the LoadBalancer and NodePort service types
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
   ##
