@@ -107,6 +107,20 @@ loki:
         kvstore:
           store: memberlist
 
+    storage:
+      bucketnames: "loki-bucket"
+
+      s3:
+        endpoint: "minio.argocd.svc.cluster.local:9000"
+      s3forcepathstyle: true
+
+      access_key_id: "${MINIO_ROOT_USER}"    
+      secret_access_key: "${MINIO_ROOT_PASSWORD}" 
+
+      insecure: true
+
+      region: "us-east-1"
+
     memberlist:
       cluster_label: "{{ .Release.Name }}.{{ .Release.Namespace }}"
       join_members:
@@ -259,21 +273,7 @@ loki:
         secretKeyRef:
           name: minio           # <--- Имя СУЩЕСТВУЮЩЕГО секрета MinIO
           key: root-password
-          
-  config:
-    storage:
-      bucketnames: "loki-bucket"
 
-      s3:
-        endpoint: "minio.argocd.svc.cluster.local:9000"
-      s3forcepathstyle: true
-
-      access_key_id: "${MINIO_ROOT_USER}"    
-      secret_access_key: "${MINIO_ROOT_PASSWORD}" 
-
-      insecure: true
-
-      region: "us-east-1"
 
 
 # -- Uncomment to configure each storage individually
