@@ -873,20 +873,33 @@ dashboardsConfigMaps: {}
 ## NOTE: values in map will be converted to ini format
 ## ref: http://docs.grafana.org/installation/configuration/
 ##
-grafana.ini:
-  paths:
-    data: /var/lib/grafana/
-    logs: /var/log/grafana
-    plugins: /var/lib/grafana/plugins
-    provisioning: /etc/grafana/provisioning
-  analytics:
-    check_for_updates: true
-  log:
-    mode: console
-  grafana_net:
-    url: https://grafana.net
-  server:
-    domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
+
+grafana:
+  ini:
+    database:
+      type: postgres
+      host: YOUR_POSTGRES_SERVICE_NAME.YOUR_POSTGRES_NAMESPACE.svc.cluster.local:5432
+      name: grafana           # <-- ДОЛЖНО СОВПАДАТЬ с database: "psql" из PostgreSQL
+      user: admin          # <-- ДОЛЖНО СОВПАДАТЬ с username: "admin" из PostgreSQL
+      password: admin
+
+
+#grafana.ini:
+#  paths:
+#    data: /var/lib/grafana/
+#    logs: /var/log/grafana
+#    plugins: /var/lib/grafana/plugins
+#    provisioning: /etc/grafana/provisioning
+#  analytics:
+#    check_for_updates: true
+#  log:
+#    mode: console
+#  grafana_net:
+#    url: https://grafana.net
+#  server:
+#    domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
+
+
 ## grafana Authentication can be enabled with the following values on grafana.ini
  # server:
       # The full public facing url you use in browser, used for redirects and emails
