@@ -878,9 +878,9 @@ grafana:
   ini:
     database:
       type: postgres
-      host: YOUR_POSTGRES_SERVICE_NAME.YOUR_POSTGRES_NAMESPACE.svc.cluster.local:5432
-      name: grafana           # <-- ДОЛЖНО СОВПАДАТЬ с database: "psql" из PostgreSQL
-      user: admin          # <-- ДОЛЖНО СОВПАДАТЬ с username: "admin" из PostgreSQL
+      host: postgres-postgresql.argocd.svc.cluster.local:5432
+      name: grafana           
+      user: admin          
       password: admin
 
 
