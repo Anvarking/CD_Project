@@ -879,7 +879,7 @@ grafana.ini:
     type: postgres
     host: postgres-postgresql.argocd.svc.cluster.local:5432
     name: grafana           
-    user: admin          
+    user: admin1          
     password: admin
 
 
