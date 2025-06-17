@@ -875,12 +875,12 @@ dashboardsConfigMaps: {}
 ##
 
 grafana.ini:
-  database:
-    type: postgres
-    host: postgres-postgresql.argocd.svc.cluster.local:5432
-    name: grafana           
-    user: admin1          
-    password: admin
+  #database:
+    #type: postgres
+    #host: postgres-postgresql.argocd.svc.cluster.local:5432
+    #name: grafana           
+    #user: admin          
+    #password: admin
 
 
 #grafana.ini:
