@@ -874,7 +874,7 @@ dashboardsConfigMaps: {}
 ## ref: http://docs.grafana.org/installation/configuration/
 ##
 
-grafana.ini:
+#grafana.ini:
   #database:
     #type: postgres
     #host: postgres-postgresql.argocd.svc.cluster.local:5432
